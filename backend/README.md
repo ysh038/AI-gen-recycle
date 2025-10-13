@@ -72,7 +72,9 @@ volumes:
 
 ### 1) 전부 실행 (MinIO + API)
 ```bash
-docker compose --profile infra --profile api up -d --build
+docker compose up -d
+#docker compose --profile infra --profile api up -d --build
+# docker compose --profile infra --profile api up -d
 ```
 
 ### 2) 인프라만 실행 (MinIO만)
@@ -99,6 +101,93 @@ docker compose build api && docker compose up -d api
 docker compose stop api
 docker compose rm -f api
 ```
+
+---
+
+## 🚀 업로드 시나리오
+
+이 서버는 **Presigned URL 방식**을 사용합니다.  
+즉, API 서버는 파일 자체를 받지 않고 **임시로 유효한 업로드 URL**을 발급해 주며,  
+클라이언트(또는 curl)가 해당 URL로 S3/MinIO에 직접 업로드합니다.
+
+---
+
+### 1) Presigned URL 발급 (POST /uploads)
+
+```bash
+curl -X POST http://localhost:8080/uploads   -H "Content-Type: application/json"   -d '{"filename":"cat.jpg","contentType":"image/jpeg","size":123456}'
+```
+
+✅ 성공 시 응답 예시:
+```json
+{
+  "presignedUrl": "http://localhost:9000/uploads/abc123.jpg?...",
+  "objectKey": "uploads/abc123.jpg"
+}
+```
+
+- **검증 로직**
+  - 허용 확장자: JPG, PNG, WebP, AVIF (옵션: GIF)
+  - 허용 MIME: `image/jpeg`, `image/png`, `image/webp`, `image/avif`
+  - 최대 크기: 10MB
+
+- **실패 시**
+  - 10MB 초과 → `400 File too large`
+  - 확장자/타입 불일치 → `400 Unsupported file type`
+
+---
+
+### 2) Presigned URL로 직접 업로드 (PUT)
+
+```bash
+curl -X PUT "<presignedUrl>"   -H "Content-Type: image/jpeg"   --data-binary @cat.jpg
+```
+
+- 요청은 API 서버를 거치지 않고 **MinIO(S3)** 로 바로 전송됩니다.
+- MinIO 콘솔(http://localhost:9001)에서 `uploads/` 버킷 안에 업로드된 객체를 확인할 수 있습니다.
+
+---
+
+### 3) 조회 Presigned URL 발급 (GET /images/:key) [선택]
+
+```bash
+curl "http://localhost:8080/images/uploads/abc123.jpg"
+```
+
+✅ 성공 시 응답 예시:
+```json
+{
+  "url": "http://localhost:9000/uploads/abc123.jpg?...",
+  "key": "uploads/abc123.jpg",
+  "expiresIn": 900,
+  "download": false
+}
+```
+
+- `as_download=true&filename=cat.jpg` 옵션으로 다운로드 강제 가능:
+```bash
+curl "http://localhost:8080/images/uploads/abc123.jpg?as_download=true&filename=cat.jpg"
+```
+
+### test_upload.sh를 통한 테스트
+
+1. brew install jq 등으로 jq 설치
+2. chmod +x test_upload.sh
+3. ./test_upload.sh
+
+### MinIO 콘솔에서 확인
+
+1. [MinIO 콘솔]("http://localhost:9001")
+2. 로그인(minio / minio123) 
+3. uploads 버킷에서 이미지 확인
+
+---
+
+## 🔑 업로드 과정 요약
+
+1. 클라이언트가 **API 서버에 업로드 요청** → Presigned PUT URL 발급
+2. 클라이언트가 **Presigned URL로 직접 PUT 업로드** → MinIO에 저장
+3. 필요 시 **조회용 Presigned GET URL 발급** → 제한 시간 동안만 다운로드 가능
 
 ---
 
