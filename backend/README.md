@@ -72,7 +72,15 @@ volumes:
 
 ### 1) 전부 실행 (MinIO + API)
 ```bash
+# 기본 (.env 파일)
 docker compose up -d
+
+# 개발 (.env.local)
+docker compose --env-file .env.local up -d
+
+# 운영 (.env.prod)
+docker compose --env-file .env.prod up -d
+
 #docker compose --profile infra --profile api up -d --build
 # docker compose --profile infra --profile api up -d
 ```

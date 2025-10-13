@@ -150,9 +150,9 @@ alembic/versions/*.pyc
 
 # Local development
 .env.local
-.env.development
+.env.dev
 .env.test
-.env.production
+.env.prod
 
 # ETC
 test.png
