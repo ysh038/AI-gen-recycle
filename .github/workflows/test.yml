@@ -1,0 +1,18 @@
+name: Docker Test
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build and test
+        run: |
+          cd backend
+          docker build --target test -t api-test -f apps/api/Dockerfile .
