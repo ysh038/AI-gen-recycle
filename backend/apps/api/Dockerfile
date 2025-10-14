@@ -14,6 +14,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends         ca-cert
 COPY apps/api/requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip && pip install -r /app/requirements.txt
 
+# ===== Test Stage =====
+FROM base as test
+COPY apps/api/ /app/
+CMD ["pytest", "tests/", "-v"]
+
 # App code
 COPY apps/api/src /app/src
 
