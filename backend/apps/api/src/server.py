@@ -128,9 +128,14 @@ def create_presigned_get(
         safe = filename or os.path.basename(key) or "download"
         resp_headers["response-content-disposition"] = f"attachment; filename*=UTF-8''{urllib.parse.quote(safe)}"
 
+    # 실제 적용되는 만료 시간 계산 (60~3600초로 클램핑)
+    effective_expiry = max(60, min(expires_in, 3600))
+    
     url = s3_public.generate_presigned_url(
         "get_object",
         Params={"Bucket": S3_BUCKET, "Key": key, **resp_headers},
-        ExpiresIn=max(60, min(expires_in, 3600)),
+        ExpiresIn=effective_expiry,
     )
-    return {"url": url, "key": key, "expiresIn": min(expires_in, 3600), "download": as_download}
+    
+    # 실제 적용된 값을 응답으로 반환
+    return {"url": url, "key": key, "expiresIn": effective_expiry, "download": as_download}
