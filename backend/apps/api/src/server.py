@@ -3,10 +3,11 @@ from fastapi import FastAPI, HTTPException, Path, Query
 from pydantic import BaseModel
 import boto3
 from botocore.client import Config
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError, EndpointConnectionError
 import uuid
 import os
 import urllib.parse
+import asyncio
 
 app = FastAPI()
 
@@ -49,12 +50,37 @@ ALLOWED_MIME = {"image/jpeg", "image/png", "image/webp", "image/avif"}
 MAX_SIZE = 10 * 1024 * 1024  # 10MB
 
 def ensure_bucket():
+    """버킷 존재 확인 및 생성"""
     try:
         s3_internal.head_bucket(Bucket=S3_BUCKET)
     except ClientError:
         s3_internal.create_bucket(Bucket=S3_BUCKET)
 
-ensure_bucket()
+async def wait_for_bucket():
+    """MinIO 준비 대기 및 버킷 생성 (재시도 로직 포함)"""
+    backoff = 1.0
+    max_retries = 5
+    
+    for attempt in range(max_retries):
+        try:
+            ensure_bucket()
+            print(f"✅ Successfully connected to MinIO and ensured bucket '{S3_BUCKET}' exists")
+            return
+        except EndpointConnectionError as e:
+            if attempt < max_retries - 1:
+                print(f"⏳ MinIO not ready yet (attempt {attempt + 1}/{max_retries}), retrying in {backoff}s...")
+                await asyncio.sleep(backoff)
+                backoff = min(backoff * 2, 5)
+            else:
+                raise RuntimeError(f"❌ MinIO is still unavailable after {max_retries} retries") from e
+        except Exception as e:
+            print(f"⚠️ Unexpected error while connecting to MinIO: {e}")
+            raise
+
+@app.on_event("startup")
+async def on_startup():
+    """서버 시작 시 실행"""
+    await wait_for_bucket()
 
 @app.post("/uploads")
 def create_presigned_put(req: UploadRequest):
