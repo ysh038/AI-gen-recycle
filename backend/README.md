@@ -185,7 +185,7 @@ curl "http://localhost:8080/images/uploads/abc123.jpg?as_download=true&filename=
 
 ### MinIO 콘솔에서 확인
 
-1. [MinIO 콘솔]("http://localhost:9001")
+1. [MinIO 콘솔](http://localhost:9001)
 2. 로그인(minio / minio123) 
 3. uploads 버킷에서 이미지 확인
 
