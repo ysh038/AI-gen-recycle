@@ -23,7 +23,8 @@ cfg = Config(signature_version="s3v4", s3={"addressing_style": "path"})
 # 내부용 클라이언트 (서버->MinIO)
 s3_internal = boto3.client(
     "s3",
-    endpoint_url=S3_ENDPOINT,
+    # endpoint_url=S3_ENDPOINT,
+    endpoint_url=S3_ENDPOINT if S3_ENDPOINT else None,  # ← 빈 문자열이면 None
     aws_access_key_id=S3_ACCESS_KEY,
     aws_secret_access_key=S3_SECRET_KEY,
     config=cfg,
@@ -33,7 +34,8 @@ s3_internal = boto3.client(
 # 외부용 클라이언트 (presigned 생성 전용)
 s3_public = boto3.client(
     "s3",
-    endpoint_url=PUBLIC_S3_BASEURL,
+    # endpoint_url=PUBLIC_S3_BASEURL,
+    endpoint_url=PUBLIC_S3_BASEURL if PUBLIC_S3_BASEURL else None,  # ← 빈 문자열이면 None
     aws_access_key_id=S3_ACCESS_KEY,
     aws_secret_access_key=S3_SECRET_KEY,
     config=cfg,
@@ -123,17 +125,23 @@ def create_presigned_get(
             raise HTTPException(status_code=404, detail="Object not found")
         raise
 
-    resp_headers = {}
-    if as_download:
-        safe = filename or os.path.basename(key) or "download"
-        resp_headers["response-content-disposition"] = f"attachment; filename*=UTF-8''{urllib.parse.quote(safe)}"
-
     # 실제 적용되는 만료 시간 계산 (60~3600초로 클램핑)
     effective_expiry = max(60, min(expires_in, 3600))
     
+    # Presigned URL 파라미터 구성
+    params = {
+        "Bucket": S3_BUCKET,
+        "Key": key
+    }
+    
+    # 다운로드 모드일 때만 ResponseContentDisposition 추가
+    if as_download:
+        safe = filename or os.path.basename(key) or "download"
+        params["ResponseContentDisposition"] = f"attachment; filename*=UTF-8''{urllib.parse.quote(safe)}"
+    
     url = s3_public.generate_presigned_url(
         "get_object",
-        Params={"Bucket": S3_BUCKET, "Key": key, **resp_headers},
+        Params=params,
         ExpiresIn=effective_expiry,
     )
     

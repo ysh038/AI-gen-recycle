@@ -5,3 +5,8 @@ botocore==1.35.22
 pydantic==2.9.2
 # Optional: if you later accept form-data uploads directly (not recommended for large files)
 # python-multipart==0.0.9
+
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.1
+moto==4.2.9  # S3 mocking용

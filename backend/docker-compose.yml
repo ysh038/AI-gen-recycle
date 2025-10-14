@@ -37,6 +37,14 @@ services:
 
   # ---- App (추후에 추가) ----
 
+  # ---- Test (API) ----
+  api-test:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: test
+    command: pytest tests/ -v
+    profiles: [test]
 networks:
   shared:
 
