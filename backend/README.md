@@ -7,7 +7,7 @@
 
 ## 📁 디렉토리 구조
 
-```
+```text
 repo/
   docker-compose.yml          # ✅ 통합 compose (infra + api 한 방에)
   .env                        # (선택) 공통 환경변수
@@ -152,7 +152,7 @@ curl -X PUT "<presignedUrl>"   -H "Content-Type: image/jpeg"   --data-binary @ca
 ```
 
 - 요청은 API 서버를 거치지 않고 **MinIO(S3)** 로 바로 전송됩니다.
-- MinIO 콘솔(http://localhost:9001)에서 `uploads/` 버킷 안에 업로드된 객체를 확인할 수 있습니다.
+- MinIO 콘솔(<http://localhost:9001>)에서 `uploads/` 버킷 안에 업로드된 객체를 확인할 수 있습니다.
 
 ---
 
@@ -200,8 +200,8 @@ curl "http://localhost:8080/images/uploads/abc123.jpg?as_download=true&filename=
 ---
 
 ## 🔗 참고
-- **MinIO Console**: http://localhost:9001  
-- **API 서버**: http://localhost:8080  
+- **MinIO Console**: <http://localhost:9001>  
+- **API 서버**: <http://localhost:8080>  
 - 기본 MinIO 계정: `minio / minio123`
 
 ---
