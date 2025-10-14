@@ -203,3 +203,12 @@ curl "http://localhost:8080/images/uploads/abc123.jpg?as_download=true&filename=
 - **MinIO Console**: http://localhost:9001  
 - **API 서버**: http://localhost:8080  
 - 기본 MinIO 계정: `minio / minio123`
+
+---
+
+## To-Do
+
+- Redis
+- CloudFlare
+- Jenkins 등 CI/CD
+- S3 전환
