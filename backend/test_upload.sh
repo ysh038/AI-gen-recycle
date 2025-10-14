@@ -3,7 +3,7 @@
 set -euo pipefail
 
 API_BASE="${API_BASE:-http://localhost:8080}"
-IMG_FILE="${IMG_FILE:-test.png}"
+IMG_FILE="${IMG_FILE:-test.jpg}"
 
 if ! command -v jq >/dev/null 2>&1; then
   echo "jq가 필요합니다. (brew install jq / apt-get install jq)" >&2
@@ -11,7 +11,7 @@ if ! command -v jq >/dev/null 2>&1; then
 fi
 
 if [ ! -f "$IMG_FILE" ]; then
-  echo "이미지 파일이 없습니다: $IMG_FILE (현재 디렉토리에 test.png를 두거나 IMG_FILE로 지정하세요)" >&2
+  echo "이미지 파일이 없습니다: $IMG_FILE (현재 디렉토리에 test.jpg를 두거나 IMG_FILE로 지정하세요)" >&2
   exit 1
 fi
 
