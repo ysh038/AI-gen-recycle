@@ -1,5 +1,5 @@
-# test_upload.sh
 #!/usr/bin/env bash
+# test_upload.sh
 set -euo pipefail
 
 API_BASE="${API_BASE:-http://localhost:8080}"
