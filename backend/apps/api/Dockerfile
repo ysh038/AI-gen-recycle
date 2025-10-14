@@ -1,5 +1,5 @@
 # apps/api/Dockerfile
-FROM python:3.11-slim
+FROM python:3.11-slim as base
 
 # Prevents Python from buffering stdout/stderr
 ENV PYTHONUNBUFFERED=1         PIP_NO_CACHE_DIR=1
@@ -19,10 +19,14 @@ FROM base as test
 COPY apps/api/ /app/
 CMD ["pytest", "tests/", "-v"]
 
+# ===== Production Stage =====
+FROM base as production
+COPY apps/api/src /app/src
+EXPOSE 8080
+CMD ["uvicorn", "src.server:app", "--host", "0.0.0.0", "--port", "8080"]
+
 # App code
 COPY apps/api/src /app/src
-
 EXPOSE 8080
-
 # Uvicorn server
 CMD ["uvicorn", "src.server:app", "--host", "0.0.0.0", "--port", "8080"]
