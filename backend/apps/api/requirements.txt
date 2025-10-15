@@ -2,6 +2,8 @@ fastapi==0.115.2
 uvicorn[standard]==0.30.6
 boto3==1.35.22
 botocore==1.35.22
+# boto3 타입 힌트 지원
+boto3-stubs[s3]==1.35.22
 pydantic==2.9.2
 # Optional: if you later accept form-data uploads directly (not recommended for large files)
 # python-multipart==0.0.9
