@@ -177,11 +177,24 @@ curl "http://localhost:8080/images/uploads/abc123.jpg"
 curl "http://localhost:8080/images/uploads/abc123.jpg?as_download=true&filename=cat.jpg"
 ```
 
+## 테스트
+
+기본적으로 git push 실행 시 Github Action을 통해 api Dockerfile 테스트 진행
+
 ### test_upload.sh를 통한 테스트
 
 1. brew install jq 등으로 jq 설치
 2. chmod +x test_upload.sh
 3. ./test_upload.sh
+
+### pytest를 통한 테스트
+
+1. (api 테스트의 경우) pytest /apps/api/tests
+2. (통합 테스트의 경우) /backend pytest
+
+### 일회용 컨테이너 환경에서 테스트
+
+1. docker compose --profile test run --rm api-test
 
 ### MinIO 콘솔에서 확인
 

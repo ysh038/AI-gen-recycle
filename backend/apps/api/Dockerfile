@@ -24,9 +24,3 @@ FROM base as production
 COPY apps/api/src /app/src
 EXPOSE 8080
 CMD ["uvicorn", "src.server:app", "--host", "0.0.0.0", "--port", "8080"]
-
-# App code
-COPY apps/api/src /app/src
-EXPOSE 8080
-# Uvicorn server
-CMD ["uvicorn", "src.server:app", "--host", "0.0.0.0", "--port", "8080"]
