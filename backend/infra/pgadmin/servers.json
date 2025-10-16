@@ -1,0 +1,14 @@
+{
+    "Servers": {
+      "1": {
+        "Name": "PostgreSQL (recycle-mvp)",
+        "Group": "Servers",
+        "Host": "postgres",
+        "Port": 5432,
+        "MaintenanceDB": "recycle_db",
+        "Username": "postgres",
+        "SSLMode": "prefer",
+        "SavePassword": true
+      }
+    }
+  }

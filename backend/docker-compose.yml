@@ -15,6 +15,44 @@ services:
       - minio-data:/data
     networks: [ shared ]
     # profiles: [ infra ]   # 필요할 때만 켤 수 있게 프로파일 태깅
+  
+  # ---- Infra (PostgreSQL) ----
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-recycle_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/db:/docker-entrypoint-initdb.d  # 초기화 스크립트 (선택)
+    networks: [shared]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---- Tool: pgAdmin (PostgreSQL 웹 UI) ----
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      # 자동 서버 등록 
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    ports:
+      - "5050:80"
+    volumes:
+      # servers.json으로 자동 등록
+      - ./infra/pgadmin/servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      - postgres
+    networks: [shared]
 
   # ---- App (API) ----
   api:
@@ -28,6 +66,15 @@ services:
       S3_SECRET_KEY: ${S3_SECRET_KEY:-minio123}
       S3_BUCKET: ${S3_BUCKET:-uploads}
       PUBLIC_S3_BASEURL: ${PUBLIC_S3_BASEURL:-http://localhost:9000}
+
+      # Auth 서비스 연동 (신규) ⭐
+      # AUTH_SERVICE_URL: ${AUTH_SERVICE_URL:-http://auth:8000}
+      # JWT_SECRET: ${JWT_SECRET:-change-this-secret-in-production}
+
+      # DB 연결 (이미지 메타데이터 저장용, 선택)
+      # DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres123}@postgres:5432/${POSTGRES_DB:-recycle_db}
+      
+      
       PORT: 8080
     ports:
       - "8080:8080"
@@ -36,7 +83,7 @@ services:
     networks: [ shared ]
     # profiles: [ api ]      # 필요할 때만 켤 수 있게 프로파일 태깅
 
-  # ---- App (추후에 추가) ----
+  # ---- App (Auth) ----
 
   # ---- Test (API) ----
   api-test:
@@ -45,8 +92,12 @@ services:
       dockerfile: apps/api/Dockerfile
       target: test
     profiles: [test]
+
+  # ---- Test (Auth) ----
+
 networks:
   shared:
 
 volumes:
   minio-data:
+  postgres-data:
