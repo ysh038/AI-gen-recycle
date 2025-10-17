@@ -16,3 +16,4 @@ jobs:
         run: |
           cd backend
           docker build --target test -t api-test -f apps/api/Dockerfile .
+          docker build --target test -t auth-test -f apps/auth/Dockerfile .
