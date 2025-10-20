@@ -3,8 +3,15 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi.security import HTTPBearer
 from src.utils.jwt import verify_jwt_token
 from src.routes import oauth
+from starlette.middleware.sessions import SessionMiddleware
+import os
 
 app = FastAPI(title = "OAuth Service")
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.getenv("SESSION_SECRET", "change-this-to-a-random-secret-key")
+)
 
 app.include_router(oauth.router, prefix="/auth/oauth", tags=["OAuth"])
 

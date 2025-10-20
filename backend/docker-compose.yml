@@ -97,6 +97,10 @@ services:
       JWT_SECRET: ${JWT_SECRET:-change-this-secret-in-production}
       JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
       JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-1440}
+
+      # Session 설정
+      SESSION_SECRET: "${SESSION_SECRET:-change-this-session-secret-in-production}"
+
       
       # OAuth
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
