@@ -108,7 +108,8 @@ services:
       
       # 기타
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
-      ENVIRONMENT: ${ENVIRONMENT:-production}
+      ## ⭐️배포 환경 구성 시 주석 해제
+      # ENVIRONMENT: ${ENVIRONMENT:-production}
     ports:
       - "8001:8000"
     depends_on:
