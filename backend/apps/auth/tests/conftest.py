@@ -17,8 +17,6 @@ os.environ["FRONTEND_URL"] = "http://localhost:5173"
 # OAuth 테스트용
 os.environ["GOOGLE_CLIENT_ID"] = "test-google-client-id"
 os.environ["GOOGLE_CLIENT_SECRET"] = "test-google-secret"
-os.environ["GITHUB_CLIENT_ID"] = "test-github-client-id"
-os.environ["GITHUB_CLIENT_SECRET"] = "test-github-secret"
 
 # 모델 import
 from src.models.database import Base, get_db
