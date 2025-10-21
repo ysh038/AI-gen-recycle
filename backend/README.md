@@ -385,5 +385,5 @@ curl "http://localhost:8080/images/uploads/abc123.jpg?as_download=true&filename=
 
 - Redis
 - CloudFlare
-- Jenkins 등 CI/CD / GitHub Action을 통한 CI/CD
+- Jenkins 등 CI/CD / GitHub Action을 통한 CI/CD / commit message 자동화?
 - S3 전환
