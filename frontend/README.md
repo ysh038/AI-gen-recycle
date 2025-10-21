@@ -1,238 +1,549 @@
-# AiNEWT - Frontend React 프로젝트 초기화 템플릿
+# AI-gen-recycle Frontend
 
-## 프로젝트 개요
+**React + TypeScript + Vite** 기반의 OAuth 로그인을 지원하는 이미지 업로드 프론트엔드입니다.
 
-이 프로젝트는 React와 TypeScript를 기반으로 한 프론트엔드 개발을 위한 초기화 템플릿입니다. 일관된 개발 환경과 코드 구조를 제공합니다.
+---
 
-## 기술 스택
+## 📁 디렉토리 구조
 
-### 핵심 기술
-
-- **Core**: React, TypeScript, JavaScript
-- **Routing**: React Router Dom
-- **클라이언트 상태 관리**: Zustand
-- **서버 상태 관리**: TanStack Query (React Query)
-- **번들러**: Vite
-- **스타일링**: CSS Module, Emotion
-
-### 기술 버전
-
-```
-- React: 19.1.0
-- React DOM: 19.1.0
-- TypeScript: 5.8.3
-- React Router Dom: 7.6.0
-- Zustand: 5.0.4
-- TanStack Query: 5.75.7
-- Vite: 6.3.5
-- Jest: 29.7.0
-- Semantic Release: 24.2.3
-- ESLint: 9.25.0
-```
-
-### 테스트
-
-- **단위 및 기능 테스트**: Jest
-- **E2E 테스트**: Cypress - (필요 시 설치)
-
-### 기타
-
-- **버전 관리**: Semantic Release (Git 커밋 메시지 기반)
-
-## 디렉토리 구조
-
+```text
+frontend/
+  ├── src/
+  │   ├── App.tsx                    # 메인 App 컴포넌트 + 라우팅
+  │   ├── main.tsx                   # 엔트리포인트
+  │   ├── routes/                    # 페이지 컴포넌트
+  │   │   ├── Home/
+  │   │   │   ├── Home.tsx
+  │   │   │   └── Home.module.css
+  │   │   ├── Login/                 # OAuth 로그인 페이지 ⭐
+  │   │   │   ├── Login.tsx
+  │   │   │   └── Login.module.css
+  │   │   ├── AuthCallback/          # OAuth 콜백 페이지 ⭐
+  │   │   │   └── AuthCallback.tsx
+  │   │   └── index.ts
+  │   ├── queries/                   # React Query hooks
+  │   │   └── login/                 # OAuth 로그인 로직 ⭐
+  │   │       ├── login.ts           # API 함수들
+  │   │       └── index.ts           # React Query hooks
+  │   ├── stores/                    # Zustand 상태 관리
+  │   │   └── shared/
+  │   │       └── index.ts           # Auth store (토큰, 사용자) ⭐
+  │   ├── components/                # 재사용 컴포넌트
+  │   ├── hooks/                     # 커스텀 hooks
+  │   ├── utils/                     # 유틸리티 함수
+  │   └── types/                     # TypeScript 타입 정의
+  ├── .env                           # 환경 변수
+  ├── package.json
+  ├── vite.config.ts
+  └── tsconfig.json
 ```
 
-├── 📁 public # 정적 파일 (빌드시 그대로 복사됨)
-│ ├── 📁 images # URL로 직접 접근할 이미지
-│ ├── 📁 svgs # URL로 직접 접근할 SVG
-│ ├── 📁 videos # URL로 직접 접근할 비디오
-│ └── 📁 etc # 기타 정적 파일
-│
-├── 📁 src
-│ ├── App.tsx # 최상위 컴포넌트
-│ ├── main.tsx # 진입점
-│ ├── global.css # 전역 스타일 (폰트, 변수 등)
-│ ├── initialize.css # 브라우저 스타일 초기화
-│ │
-│ ├── 📁 assets # 코드에서 import하는 리소스
-│ │ ├── 📁 fonts # 폰트 파일
-│ │ ├── 📁 images # 이미지 파일
-│ │ ├── 📁 svgs # SVG 파일
-│ │ ├── 📁 videos # 비디오 파일
-│ │ └── 📁 etc # 기타 리소스
-│ │
-│ ├── 📁 components # UI 컴포넌트
-│ │ └── 📁 shared # 공유 컴포넌트
-│ │
-│ ├── 📁 hooks # 커스텀 React 훅
-│ │ └── 📁 shared # 공유 훅
-│ │
-│ ├── 📁 queries # API 요청 관련 코드
-│ │ └── 📁 shared # 공유 fetch 로직
-│ │
-│ ├── 📁 routes # 라우팅 설정 및 페이지
-│ │
-│ ├── 📁 stores # 상태 관리 코드
-│ │ └── 📁 shared # 공유 스토어
-│ │
-│ ├── 📁 templates # 페이지 레이아웃 템플릿
-│ │
-│ ├── 📁 types # TypeScript 타입 정의
-│ │ └── 📁 shared # 공유 타입
-│ │
-│ └── 📁 utils # 유틸리티 함수
-│
-├── eslint.config.js # ESLint 설정
-├── vite.config.ts # Vite 설정
-├── tsconfig.json # TypeScript 설정
-├── .releaserc.json # Semantic Release 설정
-└── CHANGELOG.md # 변경 사항 로그
-```
+---
 
-## 공통화 사용 관리 방안
+## 🛠️ 기술 스택
 
-- **Private**: 각 페이지별로 하위 디렉토리 생성하여 사용 (components, hooks, queries, routes, stores, types 등)
-- **Public**: 공용 디렉토리로 기본적으로 페이지별 하위 디렉토리 불필요 (templates, utils 등)
+| 카테고리 | 기술 |
+|---------|------|
+| **프레임워크** | React 19.1.0 |
+| **언어** | TypeScript 5.8.3 |
+| **빌드 도구** | Vite 6.3.5 |
+| **라우팅** | React Router DOM 7.6.0 |
+| **상태 관리** | Zustand 5.0.4 (토큰, 사용자) |
+| **서버 상태** | TanStack React Query 5.75.7 |
+| **스타일링** | CSS Modules |
 
-## 정적 파일과 리소스 관리
+---
 
-- **정적 파일(public)**:
+## 🚀 실행 방법
 
-  - 빌드 시 그대로 복사되어 배포됨
-  - URL을 통해 직접 접근 가능
-  - 절대 경로로 접근 (`/images/example.png`)
-  - 빌드 시 변환/최적화되지 않음
-- **리소스 파일(assets)**:
+### 1) 개발 서버 시작
 
-  - 코드에서 import하여 사용
-  - 빌드 과정에서 번들링, 최적화, 해싱됨
-  - 작은 이미지는 자동으로 base64로 인라인화 가능
-  - 상대 경로로 import (`import logo from '@/assets/images/logo.png'`)
-
-## 버전 관리 (Semantic Versioning)
-
-- **MAJOR**: 호환되지 않는 API 변경 (Breaking Change)
-- **MINOR**: 이전 버전과 호환되는 새 기능 추가 (Feature)
-- **PATCH**: 이전 버전과 호환되는 버그 수정 (Fix)
-
-`semantic-release` 모듈을 통해 Git 커밋 메시지 기반으로 CHANGELOG.md를 자동 생성하고 버전을 자동화합니다.
-
-### 사용 플러그인
-
-- `@semantic-release/commit-analyzer`: 커밋 메시지 분석
-- `@semantic-release/release-notes-generator`: 릴리즈 노트 생성
-- `@semantic-release/npm`: package.json 버전 수정 및 npm 배포
-- `@semantic-release/github`: GitHub 릴리즈 생성
-- `@semantic-release/changelog`: CHANGELOG 작성
-
-
-## Prettier & ESLint 설정 가이드
-
-## 1. 필요한 확장 및 패키지 설치
-
-### 1) NPM 패키지 설치
 ```bash
+cd frontend
+
+# 의존성 설치
 npm install
+
+# 개발 서버 실행 (http://localhost:5173)
+npm run dev
 ```
 
-#### 설치 패키지 목록
+### 2) 프로덕션 빌드
 
-| 패키지명                                 | 이유 / 역할                                                                             |
-| ------------------------------------ | ----------------------------------------------------------------------------------- |
-| **eslint**                           | 코드 품질 검사 도구의 핵심 본체. 모든 규칙의 기반이 되는 Linter.                                           |
-| **prettier**                         | 코드 포매터. 줄바꿈, 들여쓰기, 따옴표 등 **스타일 자동 정리** 도구. ESLint가 못 잡는 포맷까지 담당.                    |
-| **@typescript-eslint/parser**        | TypeScript 코드를 **ESLint가 이해할 수 있도록 파싱**해주는 파서. `.ts`, `.tsx` 파일을 분석하려면 필수.          |
-| **@typescript-eslint/eslint-plugin** | TypeScript 전용 규칙 모음. `no-unused-vars`, `naming-convention` 같은 TS 특화 룰을 추가해줌.        |
-| **eslint-plugin-react**              | React JSX 관련 규칙 제공 (`react/prop-types`, `react/jsx-uses-vars` 등).                   |
-| **eslint-plugin-react-hooks**        | React Hook의 사용 규칙 검사 (`rules-of-hooks`, `exhaustive-deps` 등). Hook 잘못 쓰는 걸 미리 감지해줌. |
-| **eslint-plugin-import**             | `import` 문 정렬, 중복, 순서 등 **모듈 임포트 관련 정리** 규칙 제공. 정렬 기준 커스터마이즈에 필수.                   |
-| **eslint-plugin-prettier**           | Prettier 포맷팅 결과를 **ESLint 경고/에러로 함께 보여줌**. ESLint + Prettier 통합을 위한 다리 역할.          |
-| **eslint-config-prettier**           | ESLint와 Prettier 간 **충돌 방지** 역할. 포맷 관련 ESLint 규칙들을 끄고 Prettier가 우선되도록 해줌.           |
+```bash
+# 빌드
+npm run build
 
+# 빌드 결과 미리보기
+npm run preview
+```
 
-### 2) VSCode 확장 프로그램 설치(권장)
-- [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+### 3) 코드 품질
 
----
+```bash
+# ESLint 실행
+npm run lint
 
-## 2. 적용된 Prettier 규칙 (prettier.config.js)
+# ESLint 자동 수정
+npm run lint:fix
 
-| 옵션              | 값         | 설명                                      |
-|-------------------|------------|-------------------------------------------|
-| semi              | false      | 문장 끝에 세미콜론(;)을 붙이지 않음        |
-| singleQuote       | true       | 문자열에 작은따옴표(') 사용                |
-| trailingComma     | 'all'      | 가능한 모든 곳에 마지막 쉼표(,) 추가        |
-| printWidth        | 80         | 한 줄 최대 80자                            |
-| tabWidth          | 4          | 들여쓰기 4칸                               |
-| bracketSpacing    | true       | 중괄호({}) 안에 띄어쓰기 추가              |
-| endOfLine         | 'auto'     | OS에 맞는 줄바꿈 문자 사용                 |
+# Prettier 포맷팅
+npm run prettier:fix
+```
 
 ---
 
-## 3. 적용된 ESLint 규칙 (eslint.config.js)
+## 🔐 OAuth 로그인 플로우
 
-### Prettier 관련
-- Prettier 포맷 위반 시 워닝(warning) 발생 (`prettier/prettier: 'warn'`)
+### 전체 흐름도
 
-### TypeScript 관련
-- 사용하지 않는 변수는 경고, 단 변수명이 `_`로 시작하면 무시 (`@typescript-eslint/no-unused-vars`)
-- 함수 반환 타입 명시하지 않아도 됨 (`@typescript-eslint/explicit-module-boundary-types`)
-- 네이밍 컨벤션 (`@typescript-eslint/naming-convention`):
-    - 변수: camelCase, 단 const는 UPPER_CASE 허용
-        - boolean 타입 변수: is/has/should/can/must/was/will로 시작
-    - 함수: camelCase 와 PascalCase 둘 다 허용
-    - 클래스/인터페이스/타입: PascalCase
-    - 인터페이스: I로 시작해야 함 (예: IExample)
-    - 타입 파라미터: PascalCase, T로 시작
-
-### React 관련
-- prop-types 사용하지 않아도 됨 (`react/prop-types`)
-- JSX에서 React import 필요 없음 (`react/react-in-jsx-scope`)
-- JSX에서 사용된 변수는 정의된 것으로 간주 (`react/jsx-uses-vars`)
-
-### React Hooks 관련
-- 훅스 규칙 위반 시 에러 (`react-hooks/rules-of-hooks`)
-- 의존성 배열 누락 시 경고 (`react-hooks/exhaustive-deps`)
-
-### Import 정렬 (`import/order`)
-- 그룹: builtin, external, internal, parent, sibling, index
-- 경로 그룹:
-    - `@/**` (internal)
-    - `**/*.{css,scss,sass}` (internal)
-    - `**/*.{png,jpg,jpeg,gif,svg,webp}` (internal)
-- 그룹 간 줄바꿈(always)
-- 알파벳순 정렬(asc, 대소문자 구분 없음)
+```
+┌────────────────────────────────────────────────────────────┐
+│                    사용자 브라우저                           │
+└────┬──────────────────────────────────────────────┬────────┘
+     │                                               │
+     │ 1. /login 접속                                │ 7. /auth/callback?token=xxx
+     │                                               │
+┌────▼───────────────────────────────────────────────▼────────┐
+│              React App (localhost:5173)                     │
+├─────────────────────────────────────────────────────────────┤
+│  Login 페이지                    AuthCallback 페이지         │
+│  - "Google로 로그인" 버튼          - URL에서 토큰 추출        │
+│  - 클릭 시 리다이렉트              - Zustand에 토큰 저장      │
+│                                  - 사용자 정보 조회         │
+│                                  - 홈으로 리다이렉트         │
+└────┬────────────────────────────────────────────────────────┘
+     │
+     │ 2. window.location.href = "/auth/oauth/google"
+     ↓
+┌─────────────────────────────────────────────────────────────┐
+│          Auth 서버 (localhost:8001)                          │
+├─────────────────────────────────────────────────────────────┤
+│  3. Google로 리다이렉트                                       │
+│  4. 콜백 처리 (/auth/oauth/google/callback)                 │
+│  5. DB에 사용자 저장                                         │
+│  6. JWT 토큰 생성                                            │
+│  7. 프론트엔드로 리다이렉트 (token 포함)                      │
+└────┬────────────────────────────────────────────────────────┘
+     │
+     │ 3-6. Google OAuth
+     ↓
+┌─────────────────────────────────────────────────────────────┐
+│                  Google OAuth                                │
+│  - 사용자 로그인                                              │
+│  - 권한 승인                                                 │
+│  - Auth 서버로 콜백                                          │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 4. VSCode 에디터 설정(권장)
-`.vscode/settings.json`에 아래와 같이 설정되어 있습니다:
+## 📝 주요 파일 설명
 
-```json
-{
-  "editor.formatOnSave": false,
-  "editor.tabSize": 4,
-  "editor.detectIndentation": false,
-  "eslint.validate": ["javascript", "typescript", "typescriptreact"]
+### 1. `src/queries/login/login.ts` - OAuth API 함수
+
+```typescript
+/**
+ * Google OAuth 로그인 시작
+ */
+export const initiateGoogleLogin = () => {
+  window.location.href = `${AUTH_API_BASE}/auth/oauth/google`;
+};
+
+/**
+ * JWT 토큰 검증
+ */
+export const verifyToken = async (token: string) => {
+  const response = await fetch(`${AUTH_API_BASE}/auth/verify`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  return response.json();
+};
+
+/**
+ * 내 정보 조회
+ */
+export const getMe = async (token: string) => {
+  const response = await fetch(`${AUTH_API_BASE}/auth/me`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  return response.json();
+};
+```
+
+---
+
+### 2. `src/queries/login/index.ts` - React Query Hooks
+
+```typescript
+/**
+ * 사용자 정보 조회 훅
+ * - JWT 토큰으로 사용자 정보 가져오기
+ * - React Query로 캐싱
+ */
+export const useGetMe = (token: string | null, enabled = true) => {
+  return useQuery({
+    queryKey: ['user', 'me', token],
+    queryFn: () => getMe(token!),
+    enabled: enabled && !!token,
+    staleTime: 1000 * 60 * 5, // 5분 캐싱
+  });
+};
+
+/**
+ * 테스트 토큰 발급 훅 (개발용)
+ */
+export const useGetTestToken = () => {
+  return useMutation({
+    mutationFn: (email?: string) => getTestToken(email),
+    onSuccess: (data) => {
+      // 토큰 자동 저장
+    },
+  });
+};
+```
+
+---
+
+### 3. `src/stores/shared/index.ts` - Auth Store (Zustand)
+
+```typescript
+interface AuthState {
+  token: string | null;           // JWT 토큰
+  user: User | null;              // 사용자 정보
+  setToken: (token: string | null) => void;
+  setUser: (user: User | null) => void;
+  logout: () => void;
+  isAuthenticated: () => boolean;
+}
+
+/**
+ * 인증 상태 관리 (Zustand + localStorage)
+ * - JWT 토큰 저장
+ * - 사용자 정보 저장
+ * - 자동 로그인 (localStorage persist)
+ */
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      token: null,
+      user: null,
+      setToken: (token) => set({ token }),
+      setUser: (user) => set({ user }),
+      logout: () => set({ token: null, user: null }),
+      isAuthenticated: () => !!get().token,
+    }),
+    {
+      name: 'auth-storage', // localStorage 키
+    }
+  )
+);
+```
+
+---
+
+### 4. `src/routes/Login/Login.tsx` - 로그인 페이지
+
+```typescript
+/**
+ * 로그인 페이지
+ * - Google OAuth 로그인 버튼
+ * - GitHub OAuth 로그인 버튼
+ * - 테스트 로그인 (개발 모드만)
+ */
+function Login() {
+  const handleGoogleLogin = () => {
+    initiateGoogleLogin(); // Auth 서버로 리다이렉트
+  };
+
+  return (
+    <main>
+      <h1>로그인</h1>
+      <button onClick={handleGoogleLogin}>
+        🔐 Google로 로그인
+      </button>
+    </main>
+  );
 }
 ```
 
 ---
 
-## 5. 코드 자동 정리 명령어
-- Prettier로 전체 포맷 수정:  
-  ```bash
-  npm run prettier:fix
-  ```
-- ESLint로 자동 수정:  
-  ```bash
-  npm run lint:fix
-  ```
+### 5. `src/routes/AuthCallback/AuthCallback.tsx` - OAuth 콜백 페이지
+
+```typescript
+/**
+ * OAuth 콜백 페이지
+ * - URL에서 JWT 토큰 추출
+ * - Zustand에 저장
+ * - 사용자 정보 조회
+ * - 홈으로 리다이렉트
+ */
+function AuthCallback() {
+  useEffect(() => {
+    const token = extractTokenFromUrl();
+    if (token) {
+      setToken(token);
+    }
+  }, []);
+
+  const { data: userData } = useGetMe(token);
+
+  useEffect(() => {
+    if (userData) {
+      setUser(userData);
+      navigate('/'); // 홈으로 이동
+    }
+  }, [userData]);
+
+  return <div>로그인 중...</div>;
+}
+```
 
 ---
 
-## 6. 참고
-- 저장 시 자동 포맷은 개별 설정
-- 팀원 모두가 동일한 코드 스타일을 유지할 수 있습니다. 
+### 6. `src/App.tsx` - 라우팅 + 인증 보호
+
+```typescript
+/**
+ * 메인 App 컴포넌트
+ * - 라우팅 설정
+ * - 인증 보호 (Private Routes)
+ */
+function App() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route 
+          path="/" 
+          element={isAuthenticated ? <Home /> : <Navigate to="/login" />} 
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+```
+
+---
+
+## 🌐 환경 변수
+
+`.env` 파일:
+
+```bash
+# Auth 서버 URL
+VITE_AUTH_API_BASE=http://localhost:8001
+
+# API 서버 URL (이미지 업로드)
+VITE_API_BASE=http://localhost:8080
+```
+
+**사용 예시:**
+```typescript
+const AUTH_API_BASE = import.meta.env.VITE_AUTH_API_BASE;
+```
+
+---
+
+## 🧪 개발 팁
+
+### 1) 테스트 로그인 사용
+
+개발 중 Google OAuth 설정 없이 테스트:
+
+```typescript
+// Login.tsx에서
+{import.meta.env.DEV && (
+  <button onClick={handleTestLogin}>
+    🧪 테스트 로그인
+  </button>
+)}
+```
+
+### 2) React Query DevTools
+
+개발 서버에서 자동 활성화:
+- 브라우저 우하단에 React Query 아이콘 표시
+- 쿼리 상태, 캐시 확인 가능
+
+### 3) localStorage 확인
+
+```javascript
+// 브라우저 콘솔에서
+localStorage.getItem('auth-storage')
+// → {"token": "eyJhbG...", "user": {...}}
+```
+
+### 4) 토큰 만료 시 자동 로그아웃
+
+```typescript
+// queries/login/login.ts
+export const getMe = async (token: string) => {
+  const response = await fetch(`${AUTH_API_BASE}/auth/me`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+
+  if (response.status === 401) {
+    // 토큰 만료
+    useAuthStore.getState().logout();
+    window.location.href = '/login';
+  }
+
+  return response.json();
+};
+```
+
+---
+
+## 🔗 API 엔드포인트
+
+### Auth 서버 (localhost:8001)
+
+| 엔드포인트 | 메서드 | 설명 |
+|-----------|-------|------|
+| `/auth/oauth/google` | GET | Google OAuth 시작 (리다이렉트) |
+| `/auth/oauth/github` | GET | GitHub OAuth 시작 (리다이렉트) |
+| `/auth/oauth/google/callback` | GET | Google OAuth 콜백 (서버 전용) |
+| `/auth/oauth/test-token` | POST | 테스트 토큰 발급 (개발용) |
+| `/auth/verify` | POST | JWT 토큰 검증 |
+| `/auth/me` | GET | 내 정보 조회 (JWT 필요) |
+
+### API 서버 (localhost:8080)
+
+| 엔드포인트 | 메서드 | 설명 |
+|-----------|-------|------|
+| `/uploads` | POST | Presigned URL 발급 |
+| `/images/:key` | GET | 조회용 Presigned URL 발급 |
+
+---
+
+## 🐛 트러블슈팅
+
+### 1. CORS 에러
+
+```
+Access to XMLHttpRequest has been blocked by CORS policy
+```
+
+**해결:** Auth 서버에 CORS 미들웨어 추가 확인
+```python
+# backend/apps/auth/src/server.py
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+
+### 2. 토큰이 저장되지 않음
+
+**확인 사항:**
+- AuthCallback 컴포넌트가 `/auth/callback` 경로에 매핑되어 있는지
+- URL에 `?token=xxx` 파라미터가 있는지
+- localStorage에 저장되는지 (브라우저 콘솔에서 확인)
+
+### 3. 로그인 후 홈으로 리다이렉트 안 됨
+
+**확인 사항:**
+- `useGetMe` 훅이 정상 작동하는지
+- `userData`가 제대로 받아와지는지
+- `navigate('/')` 호출되는지
+
+### 4. Google OAuth 설정 에러
+
+```
+redirect_uri_mismatch
+```
+
+**해결:** Google Cloud Console에서 리다이렉트 URI 확인
+```
+등록된 URI: http://localhost:8001/auth/oauth/google/callback
+실제 요청 URI: http://localhost:8001/auth/oauth/google/callback
+→ 정확히 일치해야 함 (슬래시 주의!)
+```
+
+---
+
+## 📦 의존성
+
+### 주요 라이브러리
+
+```json
+{
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.6.0",
+    "@tanstack/react-query": "^5.75.7",
+    "zustand": "^5.0.4"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5",
+    "typescript": "~5.8.3",
+    "@types/react": "^19.1.2"
+  }
+}
+```
+
+---
+
+## 🚀 배포
+
+### Vercel 배포
+
+```bash
+# Vercel CLI 설치
+npm i -g vercel
+
+# 배포
+vercel
+
+# 환경 변수 설정
+vercel env add VITE_AUTH_API_BASE
+vercel env add VITE_API_BASE
+```
+
+### Netlify 배포
+
+```bash
+# Netlify CLI 설치
+npm i -g netlify-cli
+
+# 배포
+netlify deploy --prod
+
+# 환경 변수는 Netlify 대시보드에서 설정
+```
+
+---
+
+## 📚 참고 링크
+
+- **Backend README**: [../backend/README.md](../backend/README.md)
+- **React Router**: https://reactrouter.com
+- **TanStack Query**: https://tanstack.com/query
+- **Zustand**: https://zustand-demo.pmnd.rs
+- **Vite**: https://vitejs.dev
+
+---
+
+## 📝 To-Do
+
+- [ ] 프로필 페이지 추가
+- [ ] 로그아웃 버튼 추가
+- [ ] 이미지 업로드 UI 구현
+- [ ] 이미지 갤러리 페이지
+- [ ] 토큰 자동 갱신 (Refresh Token)
+- [ ] 에러 바운더리 추가
+- [ ] 로딩 스피너 컴포넌트
