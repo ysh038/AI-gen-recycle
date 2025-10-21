@@ -8,8 +8,22 @@ import uuid
 import os
 import urllib.parse
 import asyncio
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# CORS 미들웨어 추가
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:3000",
+        os.getenv("FRONTEND_URL", "http://localhost:5173"),
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ===== Env =====
 S3_ENDPOINT = os.getenv("S3_ENDPOINT", "http://minio:9000")  # 내부 통신용
