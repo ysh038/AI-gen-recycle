@@ -1,18 +1,25 @@
 // src/routes/Login/Login.tsx
+import { useNavigate } from 'react-router-dom'
+
 import styles from './Login.module.css'
 import { useGetTestToken, initiateGoogleLogin } from '../../queries/login'
 
 function Login() {
     const testTokenMutation = useGetTestToken()
+    const navigate = useNavigate()
 
     const handleGoogleLogin = () => {
         initiateGoogleLogin()
     }
 
     const handleTestLogin = () => {
-        testTokenMutation.mutate('test@example.com')
+        testTokenMutation.mutate('test@example.com', {
+            onSuccess: () => {
+                console.log('✅ Test login success, redirecting...')
+                navigate('/') // ✅ 홈으로 이동
+            },
+        })
     }
-
     return (
         <main className={styles.main}>
             <h1>로그인</h1>

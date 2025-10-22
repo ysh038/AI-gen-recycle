@@ -32,23 +32,22 @@ export const useGetMe = (token: string | null, enabled: boolean = true) => {
   });
 };
 
-/**
- * 테스트 토큰 발급 훅 (개발용)
- */
-export const useGetTestToken = () => {
-  const { setToken, setUser } = useAuthStore();
 
-  return useMutation({
-    mutationFn: (email?: string) => getTestToken(email),
-    onSuccess: (data) => {
-            setToken(data.access_token)
-            setUser(data.user)
-            console.log('Test token acquired:', data)
-        },
-        onError: (error) => {
-            console.error('Failed to get test token:', error)
-        },
+export const useGetTestToken = () => {
+    const { setToken, setRefreshToken, setUser } = useAuthStore(); // ✅ setRefreshToken 추가
+  
+    return useMutation({
+      mutationFn: (email?: string) => getTestToken(email),
+      onSuccess: (data) => {
+        setToken(data.access_token)
+        setRefreshToken(data.refresh_token) // ✅ Refresh Token 저장
+        setUser(data.user)
+        console.log('Test token acquired:', data)
+      },
+      onError: (error) => {
+        console.error('Failed to get test token:', error)
+      },
     })
-};
+  }
 
 export * from './login'

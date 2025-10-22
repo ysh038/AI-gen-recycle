@@ -1,26 +1,24 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { extractTokenFromUrl } from '../../queries/login'
+import { extractTokensFromUrl } from '../../queries/login'
 import { useGetMe } from '../../queries/login'
 import { useAuthStore } from '../../stores/shared/user'
 
 function AuthCallback() {
     const navigate = useNavigate()
-    const { setToken, setUser } = useAuthStore()
+    const { setToken, setRefreshToken, setUser } = useAuthStore() // ✅ setRefreshToken 추가
 
     useEffect(() => {
-        // URL에서 토큰 추출
-        const token = extractTokenFromUrl()
-
-        if (token) {
+        const { token, refreshToken } = extractTokensFromUrl() // ✅ 수정
+        if (token && refreshToken) {
             setToken(token)
-            console.log('Token saved:', token)
+            setRefreshToken(refreshToken)
         } else {
-            console.error('No token found in URL')
+            console.error('No tokens found in URL')
             navigate('/login')
         }
-    }, [setToken, navigate])
+    }, [setToken, setRefreshToken, navigate])
 
     const token = useAuthStore((state) => state.token)
 

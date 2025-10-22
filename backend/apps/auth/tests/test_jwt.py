@@ -61,7 +61,7 @@ class TestJWT:
         email = "test@example.com"
         
         # Refresh 토큰 생성 (user_id만 전달) ⭐
-        refresh_token = create_refresh_token(user_id, email)
+        refresh_token = create_refresh_token(user_id)
         assert isinstance(refresh_token, str)
         
         # 검증

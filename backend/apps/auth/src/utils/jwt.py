@@ -8,7 +8,7 @@ import os
 # 환경 변수
 JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key-change-in-production")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-JWT_EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES", "1440"))  # 기본 24시간
+JWT_EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES", "60"))  # 기본 24시간
 
 def create_jwt_token(user_id: int, email: str, name: str = None) -> str:
     """
@@ -60,13 +60,12 @@ def verify_jwt_token(token: str) -> Dict[str, Any]:
             headers={"WWW-Authenticate": "Bearer"}
         )
 
-def create_refresh_token(user_id: int, email: str) -> str:
+def create_refresh_token(user_id: int) -> str:
     """
     Refresh 토큰 생성
     
     Args:
         user_id: 사용자 ID
-        email: 사용자 이메일
         
     Returns:
         Refresh 토큰 문자열
@@ -75,7 +74,6 @@ def create_refresh_token(user_id: int, email: str) -> str:
     payload = {
         "user_id": user_id,
         "type": "refresh",
-        "email": email,
         "exp": expire,
         "iat": datetime.utcnow(),
     }

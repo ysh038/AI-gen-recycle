@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import { authAxios } from './axios-config'
+
 const AUTH_API_BASE =
     import.meta.env.VITE_AUTH_API_BASE || 'http://localhost:8001'
 
@@ -15,42 +17,47 @@ export const initiateGoogleLogin = () => {
  * URL에서 JWT 토큰 추출
  * OAuth 콜백 페이지에서 사용
  */
-export const extractTokenFromUrl = (): string | null => {
+export const extractTokensFromUrl = (): {
+    token: string | null
+    refreshToken: string | null
+} => {
     const params = new URLSearchParams(window.location.search)
-    return params.get('token')
+    return {
+        token: params.get('token'),
+        refreshToken: params.get('refresh_token'),
+    }
+}
+
+// ✅ Refresh Token으로 Access Token 재발급
+export const refreshAccessToken = async (
+    refreshToken: string,
+): Promise<string> => {
+    const response = await axios.post(`${AUTH_API_BASE}/auth/oauth/refresh`, {
+        refresh_token: refreshToken,
+    })
+
+    if (response.status !== 200) {
+        throw new Error('Token refresh failed')
+    }
+
+    return response.data.access_token
 }
 
 /**
  * JWT 토큰 검증
  */
+// ✅ verifyToken도 수정
 export const verifyToken = async (token: string) => {
-    const response = await axios.post(`${AUTH_API_BASE}/auth/verify`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    })
-
-    if (response.status !== 200) {
-        throw new Error('Token verification failed')
-    }
-
+    const response = await authAxios.post('/auth/verify')
     return response.data
 }
 
 /**
  * 내 정보 조회
  */
+// ✅ getMe 함수 수정 - 401 에러 시 자동 갱신 (refresh token 사용)
 export const getMe = async (token: string) => {
-    const response = await axios.get(`${AUTH_API_BASE}/auth/me`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    })
-
-    if (response.status !== 200) {
-        throw new Error('Failed to fetch user info')
-    }
-
+    const response = await authAxios.get('/auth/me')
     return response.data
 }
 
