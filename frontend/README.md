@@ -547,3 +547,4 @@ netlify deploy --prod
 - [ ] 토큰 자동 갱신 (Refresh Token)
 - [ ] 에러 바운더리 추가
 - [ ] 로딩 스피너 컴포넌트
+- [ ] 테스트 코드 추가 (cypress)
