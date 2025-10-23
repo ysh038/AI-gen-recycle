@@ -450,6 +450,7 @@ redirect_uri_mismatch
 
 ## 📝 To-Do
 
+- [ ] ☠️Next.js 전환 (SEO)
 - [ ] 프로필 페이지 추가
 - [x] 로그아웃 버튼 추가
 - [ ] 이미지 업로드 UI 구현
