@@ -73,9 +73,6 @@ npm run dev
 ```bash
 # 빌드
 npm run build
-
-# 빌드 결과 미리보기
-npm run preview
 ```
 
 ### 3) 코드 품질
@@ -347,61 +344,6 @@ VITE_AUTH_API_BASE=http://localhost:8001
 VITE_API_BASE=http://localhost:8080
 ```
 
-**사용 예시:**
-```typescript
-const AUTH_API_BASE = import.meta.env.VITE_AUTH_API_BASE;
-```
-
----
-
-## 🧪 개발 팁
-
-### 1) 테스트 로그인 사용
-
-개발 중 Google OAuth 설정 없이 테스트:
-
-```typescript
-// Login.tsx에서
-{import.meta.env.DEV && (
-  <button onClick={handleTestLogin}>
-    🧪 테스트 로그인
-  </button>
-)}
-```
-
-### 2) React Query DevTools
-
-개발 서버에서 자동 활성화:
-- 브라우저 우하단에 React Query 아이콘 표시
-- 쿼리 상태, 캐시 확인 가능
-
-### 3) localStorage 확인
-
-```javascript
-// 브라우저 콘솔에서
-localStorage.getItem('auth-storage')
-// → {"token": "eyJhbG...", "user": {...}}
-```
-
-### 4) 토큰 만료 시 자동 로그아웃
-
-```typescript
-// queries/login/login.ts
-export const getMe = async (token: string) => {
-  const response = await fetch(`${AUTH_API_BASE}/auth/me`, {
-    headers: { 'Authorization': `Bearer ${token}` },
-  });
-
-  if (response.status === 401) {
-    // 토큰 만료
-    useAuthStore.getState().logout();
-    window.location.href = '/login';
-  }
-
-  return response.json();
-};
-```
-
 ---
 
 ## 🔗 API 엔드포인트
@@ -500,48 +442,16 @@ redirect_uri_mismatch
 
 ## 🚀 배포
 
-### Vercel 배포
-
-```bash
-# Vercel CLI 설치
-npm i -g vercel
-
-# 배포
-vercel
-
-# 환경 변수 설정
-vercel env add VITE_AUTH_API_BASE
-vercel env add VITE_API_BASE
-```
-
-### Netlify 배포
-
-```bash
-# Netlify CLI 설치
-npm i -g netlify-cli
-
-# 배포
-netlify deploy --prod
-
-# 환경 변수는 Netlify 대시보드에서 설정
-```
-
----
-
 ## 📚 참고 링크
 
 - **Backend README**: [../backend/README.md](../backend/README.md)
-- **React Router**: https://reactrouter.com
-- **TanStack Query**: https://tanstack.com/query
-- **Zustand**: https://zustand-demo.pmnd.rs
-- **Vite**: https://vitejs.dev
 
 ---
 
 ## 📝 To-Do
 
 - [ ] 프로필 페이지 추가
-- [ ] 로그아웃 버튼 추가
+- [x] 로그아웃 버튼 추가
 - [ ] 이미지 업로드 UI 구현
 - [ ] 이미지 갤러리 페이지
 - [ ] 토큰 자동 갱신 (Refresh Token)
