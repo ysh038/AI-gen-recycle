@@ -4,6 +4,7 @@ from typing import Dict, Any
 from jose import jwt, JWTError
 from fastapi import HTTPException
 import os
+import time
 
 # 환경 변수
 JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key-change-in-production")
@@ -23,13 +24,15 @@ def create_jwt_token(user_id: int, email: str, name: str = None) -> str:
     """
     # 만료 시간 계산
     expire = datetime.utcnow() + timedelta(minutes=JWT_EXPIRE_MINUTES)
+
+    iat_timestamp = time.time()
     
     # 페이로드 구성
     payload = {
         "user_id": user_id,
         "email": email,
         "exp": expire,
-        "iat": datetime.utcnow(),  # 발급 시간
+        "iat": iat_timestamp,  # 발급 시간
     }
     
     # 이름이 있으면 추가
