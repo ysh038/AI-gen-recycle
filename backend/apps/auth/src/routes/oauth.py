@@ -8,10 +8,14 @@ from src.models.user import find_or_create_user, get_user_by_id
 from src.models.database import get_db
 import os
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
 
 router = APIRouter()
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
 
 @router.get("/google")
 async def google_login(request: Request):
@@ -49,7 +53,10 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
         raise HTTPException(500, f"OAuth failed: {str(e)}")
 
 @router.post("/refresh")
-def refresh_access_token(refresh_token: str, db: Session = Depends(get_db)):
+def refresh_access_token(
+    request: RefreshTokenRequest,  # ✅ Pydantic 모델 사용
+    db: Session = Depends(get_db)
+):
     """
     Refresh Token으로 새로운 Access Token 발급
     
@@ -66,7 +73,7 @@ def refresh_access_token(refresh_token: str, db: Session = Depends(get_db)):
     """
     try:
         # Refresh Token 검증 및 user_id 추출
-        user_id = verify_refresh_token(refresh_token)
+        user_id = verify_refresh_token(request.refresh_token)  # ✅ request.refresh_token
         
         # DB에서 사용자 정보 조회
         user = get_user_by_id(db, user_id)
@@ -86,7 +93,6 @@ def refresh_access_token(refresh_token: str, db: Session = Depends(get_db)):
         raise
     except Exception as e:
         raise HTTPException(401, f"Invalid refresh token: {str(e)}")
-
 
 # 테스트용
 @router.post("/test-token")
