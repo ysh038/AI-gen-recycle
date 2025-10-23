@@ -12,26 +12,47 @@ backend/
   ├── docker-compose.yml          # 통합 compose (infra + api + auth)
   ├── .env                        # 환경변수 (prod, local)
   ├── apps/
-  │   ├── api/                    # 이미지 업로드 API
+  │   ├── api/                    # API 서버
   │   │   ├── Dockerfile
   │   │   ├── requirements.txt
   │   │   ├── src/
-  │   │   │   └── server.py
+  │   │   │   ├── server.py       # FastAPI 앱 + 미들웨어 설정
+  │   │   │   ├── config.py       # 환경변수, 상수
+  │   │   │   ├── routes/         # API 엔드포인트
+  │   │   │   │   ├── __init__.py
+  │   │   │   │   ├── upload.py   # POST /uploads
+  │   │   │   │   └── image.py    # GET /images/{key}
+  │   │   │   ├── models/         # Pydantic 모델
+  │   │   │   │   ├── __init__.py
+  │   │   │   │   └── schemas.py
+  │   │   │   └── utils/          # 헬퍼 함수
+  │   │   │       ├── __init__.py
+  │   │   │       └── s3.py       # S3 클라이언트, 버킷 관리
   │   │   └── tests/
-  │   └── auth/                   # OAuth 인증 서버 ⭐
+  │   │       ├── conftest.py
+  │   │       ├── test_upload.py
+  │   │       └── test_images.py
+  │   └── auth/                   # OAuth 인증 서버 
   │       ├── Dockerfile
   │       ├── requirements.txt
   │       ├── src/
-  │       │   ├── server.py
-  │       │   ├── routes/
-  │       │   │   └── oauth.py
-  │       │   ├── models/
-  │       │   │   ├── database.py
-  │       │   │   └── user.py
-  │       │   └── utils/
-  │       │       ├── jwt.py
-  │       │       └── oauth_client.py
+  │       │   ├── server.py       # FastAPI 앱 + 미들웨어 설정
+  │       │   ├── routes/         # API 엔드포인트
+  │       │   │   ├── __init__.py
+  │       │   │   ├── oauth.py    # OAuth 로그인, 콜백
+  │       │   │   └── auth.py     # JWT 검증, 내 정보 조회
+  │       │   ├── models/         # SQLAlchemy ORM
+  │       │   │   ├── __init__.py
+  │       │   │   ├── database.py # DB 연결 설정
+  │       │   │   └── user.py     # User, OAuthAccount, Image
+  │       │   └── utils/          # 유틸리티
+  │       │       ├── __init__.py
+  │       │       ├── jwt.py      # JWT 생성/검증
+  │       │       └── oauth_client.py  # OAuth 클라이언트
   │       └── tests/
+  │           ├── conftest.py
+  │           ├── test_jwt.py
+  │           └── test_oauth.py
   └── infra/
       ├── db/                     # PostgreSQL 초기화 스크립트
       │   └── init.sql
