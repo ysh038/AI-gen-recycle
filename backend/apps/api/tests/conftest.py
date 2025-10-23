@@ -16,7 +16,9 @@ mock = mock_s3()
 mock.start()
 
 # ===== 3. 이제 server.py import (mock이 활성화된 상태에서) =====
-from src.server import app, S3_BUCKET, s3_internal
+from src.server import app  # ✅ app만 가져옴
+from src.config import S3_BUCKET  # ✅ config에서 가져옴
+from src.utils.s3 import s3_internal  # ✅ utils에서 가져옴
 
 # ===== 4. Mock S3에 버킷 생성 =====
 try:
