@@ -34,7 +34,7 @@ docker-compose logs -f
 ```
 
 **서비스 URL:**
-- Frontend: http://localhost:5173
+- Frontend: http://localhost:3000
 - API 서버: http://localhost:8080
 - Auth 서버: http://localhost:8001
 - MinIO Console: http://localhost:9001

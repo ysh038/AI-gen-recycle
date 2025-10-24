@@ -12,7 +12,7 @@ from pydantic import BaseModel
 
 router = APIRouter()
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
 class RefreshTokenRequest(BaseModel):
     refresh_token: str

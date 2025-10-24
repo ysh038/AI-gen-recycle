@@ -13,10 +13,8 @@ app = FastAPI(title = "OAuth Service")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",      # Vite 개발 서버
-        "http://localhost:3000",      # React 개발 서버 (예비)
-        "http://localhost:5174",      # Vite 대체 포트
-        os.getenv("FRONTEND_URL", "http://localhost:5173"),  # 환경변수
+        "http://localhost:3000",      # React 개발 서버
+        os.getenv("FRONTEND_URL", "http://localhost:3000"),  # 환경변수
     ],
     allow_credentials=True,
     allow_methods=["*"],  # 모든 HTTP 메서드 허용

@@ -156,7 +156,7 @@ http://localhost:8001/auth/oauth/github
 2. Google/GitHub 로그인 페이지로 리다이렉트
 3. 로그인 완료 후 콜백
 4. JWT 토큰 발급
-5. 프론트엔드로 리다이렉트 (`http://localhost:5173/auth/callback?token=...`)
+5. 프론트엔드로 리다이렉트 (`http://localhost:3000/auth/callback?token=...`)
 
 #### 2) 테스트 토큰 발급 (개발용)
 ```bash

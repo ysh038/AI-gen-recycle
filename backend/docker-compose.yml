@@ -107,7 +107,7 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       
       # 기타
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
       ## ⭐️배포 환경 구성 시 주석 해제
       # ENVIRONMENT: ${ENVIRONMENT:-production}
     ports:

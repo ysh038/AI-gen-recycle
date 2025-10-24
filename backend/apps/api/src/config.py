@@ -18,7 +18,6 @@ BOTO_CONFIG = Config(signature_version="s3v4", s3={"addressing_style": "path"})
 
 # CORS 설정
 CORS_ORIGINS = [
-    "http://localhost:5173",
     "http://localhost:3000",
-    os.getenv("FRONTEND_URL", "http://localhost:5173"),
+    os.getenv("FRONTEND_URL", "http://localhost:3000"),
 ]

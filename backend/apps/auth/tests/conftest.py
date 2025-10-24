@@ -12,7 +12,7 @@ os.environ["JWT_SECRET"] = "test-secret-key-for-testing"
 os.environ["JWT_ALGORITHM"] = "HS256"
 os.environ["JWT_EXPIRE_MINUTES"] = "60"
 os.environ["ENVIRONMENT"] = "test"
-os.environ["FRONTEND_URL"] = "http://localhost:5173"
+os.environ["FRONTEND_URL"] = "http://localhost:3000"
 
 # OAuth 테스트용
 os.environ["GOOGLE_CLIENT_ID"] = "test-google-client-id"

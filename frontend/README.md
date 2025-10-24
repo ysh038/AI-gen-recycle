@@ -64,7 +64,7 @@ cd frontend
 # 의존성 설치
 npm install
 
-# 개발 서버 실행 (http://localhost:5173)
+# 개발 서버 실행
 npm run dev
 ```
 
@@ -102,7 +102,7 @@ npm run prettier:fix
      │ 1. /login 접속                                │ 7. /auth/callback?token=xxx
      │                                               │
 ┌────▼───────────────────────────────────────────────▼────────┐
-│              React App (localhost:5173)                     │
+│              React App (localhost:3000)                     │
 ├─────────────────────────────────────────────────────────────┤
 │  Login 페이지                    AuthCallback 페이지         │
 │  - "Google로 로그인" 버튼          - URL에서 토큰 추출        │
@@ -381,7 +381,7 @@ Access to XMLHttpRequest has been blocked by CORS policy
 # backend/apps/auth/src/server.py
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
