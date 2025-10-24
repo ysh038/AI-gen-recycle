@@ -1,10 +1,13 @@
-from fastapi import APIRouter, HTTPException, Path, Query
+from fastapi import APIRouter, HTTPException, Path, Query, Depends
+from sqlalchemy.orm.session import Session
+from src.models.database import get_db
 from src.models.schemas import ImageResponse
 from src.utils.s3 import s3_internal, s3_public
 from src.config import S3_BUCKET
 from botocore.exceptions import ClientError
 import urllib.parse
 import os
+from src.models.image import Image
 
 router = APIRouter()
 
@@ -54,3 +57,38 @@ def create_presigned_get(
         expiresIn=effective_expiry,
         download=as_download
     )
+
+@router.get("/images")
+def list_my_images(
+    user_id: int,
+    skip: int = Query(0),
+    limit: int = Query(50)
+):
+    """내가 업로드한 이미지 목록"""
+    db = next(get_db())
+    
+    images = db.query(Image)\
+        .filter(Image.user_id == user_id)\
+        .order_by(Image.created_at.desc())\
+        .offset(skip)\
+        .limit(limit)\
+        .all()
+    
+    # Presigned URL 생성
+    result = []
+    for img in images:
+        url = s3_public.generate_presigned_url(
+            'get_object',
+            Params={'Bucket': S3_BUCKET, 'Key': img.object_key},
+            ExpiresIn=3600
+        )
+        result.append({
+            "id": img.id,
+            "key": img.object_key,
+            "filename": img.filename,
+            "size": img.size,
+            "url": url,
+            "created_at": img.created_at.isoformat()
+        })
+    
+    return {"images": result, "count": len(result)}
