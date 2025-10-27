@@ -20,12 +20,12 @@ function Login() {
         })
     }
     return (
-        <main>
-            <h1>로그인</h1>
-
-            <div>
+        <main className="flex flex-col items-center justify-center h-screen">
+            <h1 className="text-2xl font-bold">로그인</h1>
+            <div className="flex flex-col items-center justify-center gap-4">
                 <button
                     onClick={handleGoogleLogin}
+                    className="bg-blue-500 text-white p-2 rounded-md"
                 >
                     🔐 Google로 로그인
                 </button>
@@ -35,6 +35,7 @@ function Login() {
                     <button
                         onClick={handleTestLogin}
                         disabled={testTokenMutation.isPending}
+                        className="bg-blue-500 text-white p-2 rounded-md"
                     >
                         {testTokenMutation.isPending
                             ? '로딩중...'
