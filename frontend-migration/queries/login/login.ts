@@ -2,8 +2,7 @@ import axios from 'axios'
 
 import { authAxios } from './axios-config'
 
-const AUTH_API_BASE =
-    process.env.AUTH_API_BASE || 'http://localhost:8001'
+const AUTH_API_BASE = process.env.AUTH_API_BASE || 'http://localhost:8001'
 
 /**
  * Google OAuth 로그인 시작

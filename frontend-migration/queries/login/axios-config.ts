@@ -2,8 +2,7 @@ import axios from 'axios'
 
 import { useAuthStore } from '../../stores/shared/user'
 
-const AUTH_API_BASE =
-    process.env.AUTH_API_BASE || 'http://localhost:8001'
+const AUTH_API_BASE = process.env.AUTH_API_BASE || 'http://localhost:8001'
 
 // ✅ Axios 인스턴스 생성
 export const authAxios = axios.create({

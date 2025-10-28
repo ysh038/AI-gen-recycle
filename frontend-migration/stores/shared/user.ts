@@ -32,7 +32,7 @@ export const useAuthStore = create<IAuthState>()(
 
             setUser: (user) => set({ user }),
 
-            logout: () => set({ token: null, refreshToken: null, user: null }), 
+            logout: () => set({ token: null, refreshToken: null, user: null }),
 
             isAuthenticated: () => {
                 const { token } = get()
