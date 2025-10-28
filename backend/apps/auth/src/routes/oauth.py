@@ -103,7 +103,7 @@ def create_test_token(email: str = "test@example.com", db: Session = Depends(get
     
     user_info = {
         'provider': 'test',
-        'provider_user_id': 'test123',
+        'provider_user_id': email,
         'email': email,
         'name': "Test User",
     }

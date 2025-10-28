@@ -9,6 +9,7 @@ export interface ImageItem {
     size: number
     url: string // ✅ Presigned URL
     created_at: string
+    user_id: number
 }
 
 export interface ImageListResponse {
@@ -24,7 +25,7 @@ export async function getMyImages(
     skip: number = 0,
     limit: number = 50,
 ): Promise<ImageListResponse> {
-    const response = await axios.get(`${API_BASE}/images`, {
+    const response = await axios.get(`${API_BASE}/images/public`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },

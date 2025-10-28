@@ -81,6 +81,7 @@ export default function Images() {
                             <div className="text-xs text-gray-500 mt-1">
                                 <p>{formatFileSize(image.size)}</p>
                                 <p>{formatDate(image.created_at)}</p>
+                                <p>업로더: {image.user_id}</p>
                             </div>
                         </div>
                     </div>
