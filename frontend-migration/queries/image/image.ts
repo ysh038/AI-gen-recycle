@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { UserResponse } from '@/types/shared/user'
 
 const API_BASE = process.env.API_BASE || 'http://localhost:8080'
 
@@ -9,7 +10,7 @@ export interface ImageItem {
     size: number
     url: string // ✅ Presigned URL
     created_at: string
-    user_id: number
+    user: UserResponse
 }
 
 export interface ImageListResponse {

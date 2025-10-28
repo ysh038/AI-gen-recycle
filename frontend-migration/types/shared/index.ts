@@ -1,1 +1,1 @@
-export {}
+export type { UserResponse } from './user'

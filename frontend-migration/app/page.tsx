@@ -16,7 +16,7 @@ function Home() {
     return (
         <main className="flex flex-col items-center justify-center h-screen">
             <h1 className="text-2xl font-bold">테스트 로그인 성공</h1>
-            <p className="text-lg">사용자 정보: {user?.user_id}</p>
+            <p className="text-lg">사용자 정보: {user?.name}</p>
             <p className="text-lg">이메일: {user?.email}</p>
             <div>
                 <button

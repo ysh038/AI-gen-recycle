@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Path, Query, Depends
 from sqlalchemy.orm.session import Session
+from src.routes.users import get_user
 from src.models.database import get_db
 from src.models.schemas import ImageResponse
 from src.utils.s3 import s3_internal, s3_public
@@ -9,8 +10,14 @@ import urllib.parse
 import os
 from src.models.image import Image
 from src.utils.auth import get_current_user
+from src.models.user import User
 
 router = APIRouter()
+
+def get_user_by_id(user_id: int, db: Session) -> User | None:
+    """사용자 ID로 조회 (내부용)"""
+    return db.query(User).filter(User.id == user_id).first()
+
 
 @router.get("/images/public")
 async def list_all_images(
@@ -32,6 +39,9 @@ async def list_all_images(
             Params={'Bucket': S3_BUCKET, 'Key': img.object_key},
             ExpiresIn=3600
         )
+
+        user = get_user_by_id(img.user_id, db)
+
         result.append({
             "id": img.id,
             "key": img.object_key,
@@ -39,7 +49,8 @@ async def list_all_images(
             "size": img.size,
             "url": url,
             "created_at": img.created_at.isoformat(),
-            "user_id": img.user_id  # ✅ 업로더 정보 포함
+            "user_id": img.user_id,
+            "user": user  # ✅ 업로더 정보 포함
         })
     
     return {"images": result, "count": len(result)}
