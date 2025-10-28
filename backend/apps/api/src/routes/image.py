@@ -8,6 +8,7 @@ from botocore.exceptions import ClientError
 import urllib.parse
 import os
 from src.models.image import Image
+from src.utils.auth import get_current_user
 
 router = APIRouter()
 
@@ -59,14 +60,13 @@ def create_presigned_get(
     )
 
 @router.get("/images")
-def list_my_images(
-    user_id: int,
-    skip: int = Query(0),
-    limit: int = Query(50)
+async def list_my_images(
+    user_id: int = Depends(get_current_user),
+    db: Session = Depends(get_db),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100)
 ):
     """내가 업로드한 이미지 목록"""
-    db = next(get_db())
-    
     images = db.query(Image)\
         .filter(Image.user_id == user_id)\
         .order_by(Image.created_at.desc())\
