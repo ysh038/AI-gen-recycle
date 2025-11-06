@@ -1,6 +1,6 @@
 'use client'
 
-import { useMyImages } from '@/queries/image'
+import { useMyImages, usePublicImages } from '@/queries/image'
 
 export default function Images() {
     function formatFileSize(bytes: number): string {
@@ -18,7 +18,7 @@ export default function Images() {
         })
     }
 
-    const { data, isLoading, error } = useMyImages()
+    const { data, isLoading, error } = usePublicImages()
 
     if (isLoading) {
         return (
@@ -77,7 +77,7 @@ export default function Images() {
                         </svg>
                     </div>
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">
-                        내 이미지
+                        공개 이미지
                     </h1>
                 </div>
                 

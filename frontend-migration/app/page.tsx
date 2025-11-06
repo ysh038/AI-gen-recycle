@@ -3,6 +3,7 @@ import { NavBar } from '@/components/shared'
 import { useAuthStore } from '../stores/shared/user'
 import { useRouter } from 'next/navigation'
 import Images from '@/components/home/Images'
+import { useEffect } from 'react'
 
 function Home() {
     const user = useAuthStore((state) => state.user)
@@ -25,9 +26,11 @@ function Home() {
                     {/* Success Badge */}
                     <div className="flex items-center justify-center mb-6">
                         <div className="bg-emerald-500/20 px-4 py-2 rounded-full border border-emerald-400/30">
-                            <span className="text-emerald-300 text-sm font-medium">
+                            {user?.user_id ? <span className="text-emerald-300 text-sm font-medium">
                                 ✓ 로그인 완료
-                            </span>
+                            </span> : <span className="text-red-300 text-sm font-medium">
+                                미 로그인
+                            </span>}
                         </div>
                     </div>
                     

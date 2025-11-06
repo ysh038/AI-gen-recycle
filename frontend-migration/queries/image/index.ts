@@ -1,6 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
-import { getMyImages } from './image'
+import { getMyImages, getPublicImages } from './image'
 import { useAuthStore } from '@/stores/shared/user'
+
+/**
+ * 공개 이미지 목록 조회 (인증 불필요) ⭐
+ */
+export const usePublicImages = (skip = 0, limit = 50) => {
+    return useQuery({
+        queryKey: ['images', 'public', skip, limit],
+        queryFn: () => getPublicImages(skip, limit),
+        staleTime: 1000 * 60,
+    })
+}
 
 /**
  * 내 이미지 목록 조회 훅

@@ -19,6 +19,24 @@ export interface ImageListResponse {
 }
 
 /**
+ * 공개 이미지 목록 조회 (인증 불필요) ⭐
+ */
+export async function getPublicImages(
+    skip: number = 0,
+    limit: number = 50,
+): Promise<ImageListResponse> {
+    const response = await axios.get(`${API_BASE}/images/public`, {
+        // ✅ Authorization 헤더 없음
+        params: {
+            skip,
+            limit,
+        },
+    })
+
+    return response.data
+}
+
+/**
  * 내 이미지 목록 조회
  */
 export async function getMyImages(
